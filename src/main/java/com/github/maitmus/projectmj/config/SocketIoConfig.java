@@ -1,0 +1,36 @@
+package com.github.maitmus.projectmj.config;
+
+import com.corundumstudio.socketio.SocketIOServer;
+import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SocketIoConfig {
+    @Value("${socketio.server.hostname}")
+    private String hostname;
+
+    @Value("${socketio.server.port}")
+    private int port;
+
+    private SocketIOServer server;
+
+    @Bean
+    public SocketIOServer socketIoServer() {
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname(hostname);
+        config.setPort(port);
+        config.setOrigin("*");
+        server = new SocketIOServer(config);
+        server.start();
+        return server;
+    }
+
+    @PreDestroy
+    public void stopSocketIoServer() {
+        if (server != null) {
+            server.stop();
+        }
+    }
+}

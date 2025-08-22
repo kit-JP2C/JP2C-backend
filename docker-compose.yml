@@ -1,0 +1,7 @@
+services:
+  app:
+    image: project-mj
+    container_name: project-mj
+    ports:
+      - 8080:8080
+      - 3000:3000
