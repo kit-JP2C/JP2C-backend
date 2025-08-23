@@ -1,4 +1,4 @@
-package com.github.maitmus.projectmj.common.dto;
+package com.github.jp2c.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

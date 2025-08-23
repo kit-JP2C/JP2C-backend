@@ -1,8 +1,8 @@
-package com.github.maitmus.projectmj.room.controller;
+package com.github.jp2c.room.controller;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.github.maitmus.projectmj.room.dto.RoomJoinOrLeaveRequest;
-import com.github.maitmus.projectmj.room.service.RoomService;
+import com.github.jp2c.room.dto.RoomJoinOrLeaveRequest;
+import com.github.jp2c.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

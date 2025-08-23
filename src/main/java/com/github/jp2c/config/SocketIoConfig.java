@@ -1,4 +1,4 @@
-package com.github.maitmus.projectmj.config;
+package com.github.jp2c.config;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import jakarta.annotation.PreDestroy;

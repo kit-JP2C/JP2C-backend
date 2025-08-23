@@ -1,7 +1,7 @@
-package com.github.maitmus.projectmj.runner;
+package com.github.jp2c.runner;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.github.maitmus.projectmj.room.controller.RoomController;
+import com.github.jp2c.room.controller.RoomController;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

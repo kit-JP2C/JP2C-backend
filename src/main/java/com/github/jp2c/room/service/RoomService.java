@@ -1,11 +1,11 @@
-package com.github.maitmus.projectmj.room.service;
+package com.github.jp2c.room.service;
 
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.github.maitmus.projectmj.common.dto.CommonErrorResponse;
-import com.github.maitmus.projectmj.room.dto.RoomJoinOrLeaveRequest;
-import com.github.maitmus.projectmj.room.dto.RoomListWrapper;
+import com.github.jp2c.common.dto.CommonErrorResponse;
+import com.github.jp2c.room.dto.RoomJoinOrLeaveRequest;
+import com.github.jp2c.room.dto.RoomListWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.github.maitmus.projectmj.room.dto;
+package com.github.jp2c.room.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

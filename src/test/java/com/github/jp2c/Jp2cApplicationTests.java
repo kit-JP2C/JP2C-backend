@@ -1,10 +1,9 @@
-package com.github.maitmus.projectmj;
+package com.github.jp2c;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProjectMjApplicationTests {
+class Jp2cApplicationTests {
 //
 //    @Test
 //    void contextLoads() {
