@@ -36,12 +36,20 @@ public class SocketEventRegistrar implements ApplicationListener<ContextRefreshe
                 Class<?>[] paramTypes = method.getParameterTypes();
 
                 Class<?> dataType = Void.class;
+                int nonFrameworkParamCount = 0;
                 for (Class<?> type : paramTypes) {
                     if (!SocketIOClient.class.isAssignableFrom(type)
                         && !AckRequest.class.isAssignableFrom(type)) {
-                        dataType = type;
-                        break;
+                        nonFrameworkParamCount++;
+                        if (nonFrameworkParamCount == 1) {
+                            dataType = type;
+                        }
                     }
+                }
+                if (nonFrameworkParamCount > 1) {
+                    log.error("이벤트 리스너 '{}' → {}.{}: 여러 개의 데이터 파라미터가 있습니다. 하나만 허용됩니다. 등록을 건너뜁니다.",
+                        eventName, bean.getClass().getSimpleName(), method.getName());
+                    continue;
                 }
 
                 log.info("이벤트 리스너 등록됨: '{}' → {}.{}",
@@ -55,7 +63,7 @@ public class SocketEventRegistrar implements ApplicationListener<ContextRefreshe
                             .map(type -> {
                                 if (SocketIOClient.class.isAssignableFrom(type)) return client;
                                 if (AckRequest.class.isAssignableFrom(type)) return ackSender;
-                                if (type.isAssignableFrom(finalDataType)) return data;
+                                if (finalDataType.isAssignableFrom(type) || type.equals(finalDataType)) return data;
                                 return null;
                             })
                             .toArray();
