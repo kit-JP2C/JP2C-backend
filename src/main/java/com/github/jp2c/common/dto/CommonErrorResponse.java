@@ -1,12 +1,17 @@
 package com.github.jp2c.common.dto;
 
-import lombok.AllArgsConstructor;
+import com.github.jp2c.common.constant.ResponseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CommonErrorResponse {
-    private String message;
+    protected ResponseStatus status;
+    protected String message;
+
+    public CommonErrorResponse(String message) {
+        this.status = ResponseStatus.ERROR;
+        this.message = message;
+    }
 }

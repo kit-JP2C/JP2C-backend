@@ -13,20 +13,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RoomController {
     private final RoomService roomService;
-    private final SocketIOServer server;
 
     @SocketEvent("join-room")
     public void handleJoinRoom(SocketIOClient client, RoomJoinOrLeaveRequest request, AckRequest ackRequest) {
-        roomService.joinRoom(client, server, request, ackRequest);
+        roomService.joinRoom(client, request, ackRequest);
     }
 
     @SocketEvent("leave-room")
-    public void handleLeaveRoom(SocketIOClient client, RoomJoinOrLeaveRequest request, AckRequest ignoredAckRequest) {
-        roomService.leaveRoom(client, request);
+    public void handleLeaveRoom(SocketIOClient client, RoomJoinOrLeaveRequest request, AckRequest ackRequest) {
+        roomService.leaveRoom(client, request, ackRequest);
     }
 
     @SocketEvent("get-all-rooms")
     public void handleGetAllRooms(AckRequest ackRequest) {
-        roomService.getAllRooms(server, ackRequest);
+        roomService.getAllRooms(ackRequest);
     }
 }
