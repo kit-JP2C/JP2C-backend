@@ -1,0 +1,70 @@
+name: Release Deploy
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: jp2c
+          IMAGE_TAG: ${{ github.event.pull_request.head.ref }}
+        run: |
+          VERSION=${IMAGE_TAG#release/}
+          echo "Using version tag: $VERSION"
+          docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION --platform linux/amd64,linux/arm64 --push .
+
+      # 🔑 Kubeconfig 세팅
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.K3S_KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+          
+      # ECR Pull Secret 생성
+      - name: Create ECR Pull Secret
+        run: |
+          kubectl delete secret ecr-regcred --ignore-not-found
+          kubectl create secret docker-registry ecr-regcred \
+            --docker-server=${{ secrets.ECR_ADDRESS }} \
+            --docker-username=AWS \
+            --docker-password="$(aws ecr get-login-password --region ap-northeast-2)"
+
+      # Helm upgrade 실행
+      - name: Deploy with Helm
+        run: |
+          VERSION=${{ github.event.pull_request.head.ref }}
+          VERSION=${VERSION#release/}
+
+          helm upgrade --install jp2c ./jp2c-chart \
+            --set image.repository=${{ steps.login-ecr.outputs.registry }}/jp2c \
+            --set image.tag=$VERSION

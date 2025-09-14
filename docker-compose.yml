@@ -1,7 +1,13 @@
 services:
   app:
-    image: project-mj
-    container_name: project-mj
+    image: jp2c
+    container_name: jp2c
     ports:
       - 8080:8080
       - 3000:3000
+    networks:
+      - jp2c
+
+networks:
+  jp2c:
+    driver: bridge

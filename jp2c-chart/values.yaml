@@ -1,0 +1,41 @@
+replicaCount: 3
+
+image:
+  repository: 975715318240.dkr.ecr.ap-northeast-2.amazonaws.com/jp2c
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
+    - name: socket
+      port: 3000
+      targetPort: 3000
+      nodePort: 30001
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+env:
+  SPRING_PROFILES_ACTIVE: "k8s"
+  REDIS_URL: "redis://jp2c-redis:6379"
+
+redis:
+  image: redis:7.2
+  port: 6379
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

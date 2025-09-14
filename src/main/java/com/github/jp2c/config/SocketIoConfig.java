@@ -1,0 +1,43 @@
+package com.github.jp2c.config;
+
+import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.store.RedissonStoreFactory;
+import jakarta.annotation.PreDestroy;
+import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@RequiredArgsConstructor
+public class SocketIoConfig {
+    @Value("${socketio.server.hostname}")
+    private String hostname;
+
+    @Value("${socketio.server.port}")
+    private int port;
+
+    private SocketIOServer server;
+
+    private final RedissonClient redissonClient;
+
+    @Bean
+    public SocketIOServer socketIoServer() {
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname(hostname);
+        config.setPort(port);
+        config.setOrigin("*");
+        config.setStoreFactory(new RedissonStoreFactory(redissonClient));
+        server = new SocketIOServer(config);
+        server.start();
+        return server;
+    }
+
+    @PreDestroy
+    public void stopSocketIoServer() {
+        if (server != null) {
+            server.stop();
+        }
+    }
+}
