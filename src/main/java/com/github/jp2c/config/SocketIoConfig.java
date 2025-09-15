@@ -8,6 +8,10 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,7 +24,9 @@ public class SocketIoConfig {
 
     private SocketIOServer server;
 
-    private final RedissonClient redissonClient;
+    private final Optional<RedissonClient> redissonClient;
+
+    private final Environment environment;
 
     @Bean
     public SocketIOServer socketIoServer() {
@@ -28,7 +34,9 @@ public class SocketIoConfig {
         config.setHostname(hostname);
         config.setPort(port);
         config.setOrigin("*");
-        config.setStoreFactory(new RedissonStoreFactory(redissonClient));
+
+        redissonClient.ifPresent(client -> config.setStoreFactory(new RedissonStoreFactory(client)));
+
         server = new SocketIOServer(config);
         server.start();
         return server;

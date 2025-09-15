@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.51.0'
+    implementation 'org.redisson:redisson:3.51.0'
 }
 
 tasks.named('test') {

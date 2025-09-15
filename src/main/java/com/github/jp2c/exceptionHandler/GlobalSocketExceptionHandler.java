@@ -20,4 +20,10 @@ public class GlobalSocketExceptionHandler {
         log.error("[RuntimeException]: {}", ex.getMessage(), ex);
         return new CommonErrorResponse(ex.getMessage());
     }
+
+    @SocketExceptionHandler(Exception.class)
+    public CommonErrorResponse handleException(Exception ex) {
+        log.error("[Exception]: {}", ex.getMessage(), ex);
+        return new CommonErrorResponse(ex.getMessage());
+    }
 }
