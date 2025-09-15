@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.github.jp2c.annotation.SocketEvent;
 import com.github.jp2c.common.dto.CommonErrorResponse;
 import com.github.jp2c.registry.SocketExceptionRegistry;
+import com.github.jp2c.registry.SocketIoMiddleware;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class SocketEventRegistrar implements ApplicationListener<ContextRefreshedEvent> {
     private final SocketIOServer server;
     private final ApplicationContext context;
+    private final SocketIoMiddleware socketIoMiddleware;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -62,7 +64,7 @@ public class SocketEventRegistrar implements ApplicationListener<ContextRefreshe
 
                 final Class<?> finalDataType = dataType;
 
-                server.addEventListener(eventName, finalDataType, (client, data, ackSender) -> {
+                socketIoMiddleware.registerSafeListener(eventName, finalDataType, server, (client, data, ackSender) -> {
                     try {
                         Object[] args = Arrays.stream(paramTypes)
                             .map(type -> {
