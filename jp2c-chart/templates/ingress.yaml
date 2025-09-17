@@ -10,13 +10,10 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
-    - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Values.ingress.tls.secretName }}
+    - secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
   rules:
-    - host: {{ .Values.ingress.host }}
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -24,5 +21,5 @@ spec:
               service:
                 name: {{ .Chart.Name }}-service
                 port:
-                  number: 3000   # ✅ 외부에서는 / 경로가 ws로만 연결되도록
+                  number: 3000
 {{- end }}
