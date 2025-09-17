@@ -43,6 +43,7 @@ redis:
 ingress:
   enabled: true
   className: nginx
+  host: "61-76-178-115.sslip.io"
   tls:
     enabled: true
     secretName: jp2c-tls

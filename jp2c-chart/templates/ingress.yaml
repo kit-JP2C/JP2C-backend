@@ -10,7 +10,9 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
-    - secretName: {{ .Values.ingress.tls.secretName }}
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
   rules:
     - http:
