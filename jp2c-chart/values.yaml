@@ -40,9 +40,9 @@ redis:
       cpu: 200m
       memory: 256Mi
 
-  ingress:
+ingress:
+  enabled: true
+  className: nginx
+  tls:
     enabled: true
-    className: nginx
-    tls:
-      enabled: true
-      secretName: jp2c-tls
+    secretName: jp2c-tls
