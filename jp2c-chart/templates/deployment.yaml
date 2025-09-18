@@ -37,7 +37,7 @@ spec:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 20   # 기동 안정화 시간 확보
+            initialDelaySeconds: 45   # 기동 안정화 시간 확보
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
@@ -46,7 +46,7 @@ spec:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 30   # 조금 더 여유
+            initialDelaySeconds: 60   # 조금 더 여유
             periodSeconds: 20         # 너무 자주 안 해도 됨
             timeoutSeconds: 3
             failureThreshold: 3
