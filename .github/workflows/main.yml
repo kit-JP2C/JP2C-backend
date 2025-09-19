@@ -1,15 +1,12 @@
 name: Release Deploy
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build-and-deploy:
-    if: ${{ github.event.pull_request.merged == true && (startsWith(github.event.pull_request.head.ref, 'release/') || startsWith(github.event.pull_request.head.ref, 'hotfix/')) }}
     runs-on: ubuntu-latest
 
     steps:
@@ -37,9 +34,9 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: jp2c
-          IMAGE_TAG: ${{ github.event.pull_request.head.ref }}
+          GIT_TAG: ${{ github.ref_name }}
         run: |
-          VERSION=$(echo "$IMAGE_TAG" | sed -E 's/^(release|hotfix)\///')
+          VERSION=$(echo "$GIT_TAG" | sed 's/^v//')
           echo "Using version tag: $VERSION"
           docker buildx build -t $ECR_REGISTRY/$ECR_REPOSITORY:$VERSION --platform linux/amd64,linux/arm64 --push .
 
@@ -49,7 +46,7 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.K3S_KUBECONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
-          
+
       # ECR Pull Secret 생성
       - name: Create ECR Pull Secret
         run: |
@@ -62,9 +59,9 @@ jobs:
       # Helm upgrade 실행
       - name: Deploy with Helm
         env:
-          IMAGE_TAG: ${{ github.event.pull_request.head.ref }}
+          GIT_TAG: ${{ github.ref_name }}
         run: |
-          VERSION=$(echo "$IMAGE_TAG" | sed -E 's/^(release|hotfix)\///')
+          VERSION=$(echo "$GIT_TAG" | sed 's/^v//')
 
           helm upgrade --install jp2c ./jp2c-chart \
             --set image.repository=${{ steps.login-ecr.outputs.registry }}/jp2c \
