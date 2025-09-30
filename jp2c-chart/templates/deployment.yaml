@@ -26,6 +26,16 @@ spec:
               value: {{ .Values.env.SPRING_PROFILES_ACTIVE | quote }}
             - name: REDIS_URL
               value: {{ .Values.env.REDIS_URL | quote }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: jp2c-postgres-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jp2c-postgres-secret
+                  key: POSTGRES_PASSWORD
           resources:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}

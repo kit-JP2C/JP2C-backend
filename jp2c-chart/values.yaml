@@ -1,8 +1,6 @@
 replicaCount: 3
 
 image:
-  repository: 975715318240.dkr.ecr.ap-northeast-2.amazonaws.com/jp2c
-  tag: "latest"
   pullPolicy: IfNotPresent
 
 service:
@@ -39,3 +37,11 @@ redis:
     limits:
       cpu: 200m
       memory: 256Mi
+
+postgres:
+  enabled: true
+  image: postgres:16
+  db: jp2c
+  secretName: jp2c-postgres-secret
+  persistence:
+    size: 5Gi
