@@ -1,0 +1,64 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jp2c-postgres
+  labels:
+    app: jp2c-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: Helm
+spec:
+  serviceName: jp2c-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jp2c-postgres
+  template:
+    metadata:
+      labels:
+        app: jp2c-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.db | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.postgres.secretName }}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.postgres.persistence.size }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jp2c-postgres
+  labels:
+    app: jp2c-postgres
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: jp2c-postgres
+{{- end }}
