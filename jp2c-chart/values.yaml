@@ -45,3 +45,25 @@ postgres:
   secretName: jp2c-postgres-secret
   persistence:
     size: 5Gi
+
+jp2cIngress:
+  enabled: true
+  namespace: default
+  className: traefik
+  tlsSecret: jp2c-tls
+  host: 61-76-178-115.sslip.io
+  service:
+    name: jp2c-service
+    wsPort: 3000
+    httpPort: 8080
+
+grafanaIngress:
+  enabled: true
+  namespace: logging
+  className: traefik
+  tlsSecret: jp2c-tls
+  host: 61-76-178-115.sslip.io
+  path: /grafana
+  service:
+    name: grafana
+    port: 80

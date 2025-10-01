@@ -1,0 +1,67 @@
+{{- if .Values.jp2cIngress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jp2c-ingress
+  namespace: {{ .Values.jp2cIngress.namespace }}
+  labels:
+    app: jp2c
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: Helm
+spec:
+  ingressClassName: {{ .Values.jp2cIngress.className }}
+  tls:
+    - secretName: {{ .Values.jp2cIngress.tlsSecret }}
+  rules:
+    - host: {{ .Values.jp2cIngress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.jp2cIngress.service.name }}
+                port:
+                  number: {{ .Values.jp2cIngress.service.wsPort }}
+    - host: {{ .Values.jp2cIngress.host }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.jp2cIngress.service.name }}
+                port:
+                  number: {{ .Values.jp2cIngress.service.httpPort }}
+{{- end }}
+
+---
+
+{{- if .Values.grafanaIngress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jp2c-grafana-ingress
+  namespace: {{ .Values.grafanaIngress.namespace }}
+  labels:
+    app: grafana
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: Helm
+spec:
+  ingressClassName: {{ .Values.grafanaIngress.className }}
+  tls:
+    - secretName: {{ .Values.grafanaIngress.tlsSecret }}
+  rules:
+    - host: {{ .Values.grafanaIngress.host }}
+      http:
+        paths:
+          - path: {{ .Values.grafanaIngress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.grafanaIngress.service.name }}
+                port:
+                  number: {{ .Values.grafanaIngress.service.port }}
+{{- end }}

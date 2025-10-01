@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CommonEventService {
     public void handleConnect(SocketIOClient client) {
-        log.info("유저 접속 : {}", client.getSessionId());
+        String nickname = client.get("nickname");
+        log.info("유저 접속 : {}", nickname);
     }
 
     public void handleDisconnect(SocketIOClient client) {
-        log.info("유저 접속 해제 : {}", client.getSessionId());
+        String nickname = client.get("nickname");
+        log.info("유저 접속 해제 : {}", nickname);
     }
 }
