@@ -54,11 +54,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: Helm
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - name: postgres
       port: 5432
       targetPort: 5432
+      nodePort: 32500
   selector:
     app: jp2c-postgres
 {{- end }}
