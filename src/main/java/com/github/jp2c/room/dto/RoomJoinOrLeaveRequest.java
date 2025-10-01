@@ -6,6 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class RoomJoinOrLeaveRequest {
-    String username;
     String roomName;
 }
