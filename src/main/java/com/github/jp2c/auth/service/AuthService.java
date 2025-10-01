@@ -32,7 +32,7 @@ public class AuthService {
 
     @Transactional
     public Account login(String username, String password) {
-        Optional<Account> account = authRepository.findByUsername(username);
+        Optional<Account> account = authRepository.findByUsernameAndIsAppliedIsTrue(username);
 
         if (account.isEmpty()) {
             return null;

@@ -26,6 +26,9 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false)
+    private final Boolean isApplied = false;
+
     public Account(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
