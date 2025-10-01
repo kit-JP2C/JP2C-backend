@@ -22,16 +22,15 @@ public class RoomService {
     private final SocketIOServer server;
 
     public void joinRoom(SocketIOClient client, RoomJoinOrLeaveRequest req, AckRequest ackRequest) {
+        String nickname = client.get("nickname");
         if (server.getRoomOperations(req.getRoomName()).getClients().stream().anyMatch(
-            socket -> Objects.equals(socket.get("username"), req.getUsername())
+            socket -> Objects.equals(socket.get("nickname"), nickname)
         )) {
-            String errorMessage = String.format("사용자 '%s'은(는) 이미 방에 존재합니다.", req.getUsername());
+            String errorMessage = String.format("사용자 '%s'은(는) 이미 방에 존재합니다.", nickname);
             throw new BadRequestException(errorMessage);
         }
         client.joinRoom(req.getRoomName());
-        log.info("{} joined room: {}", req.getUsername(), req.getRoomName());
-
-        client.set("username", req.getUsername());
+        log.info("{} joined room: {}", nickname, req.getRoomName());
 
         client.getNamespace().getRoomOperations(req.getRoomName())
             .sendEvent("room-joined", req);
@@ -40,14 +39,14 @@ public class RoomService {
     }
 
     public void leaveRoom(SocketIOClient client, RoomJoinOrLeaveRequest req, AckRequest ackRequest) {
+        String nickname = client.get("nickname");
+
         if (client.getAllRooms().stream().noneMatch(roomName -> Objects.equals(roomName, req.getRoomName()))) {
             throw new BadRequestException("방에 참가하고 있지 않습니다.");
         }
 
         client.leaveRoom(req.getRoomName());
-        log.info("{} left room: {}", client.get("username"), req.getRoomName());
-
-        client.del("username");
+        log.info("{} left room: {}", nickname, req.getRoomName());
 
         client.getNamespace().getRoomOperations(req.getRoomName())
             .sendEvent("room-left", req);
