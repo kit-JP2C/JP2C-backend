@@ -3,13 +3,18 @@ package com.github.jp2c.config;
 import com.corundumstudio.socketio.AuthorizationResult;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.store.RedissonStoreFactory;
+import com.github.jp2c.auth.entity.Account;
+import com.github.jp2c.auth.service.AuthService;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Configuration
@@ -17,13 +22,11 @@ import java.util.Optional;
 public class SocketIoConfig {
     @Value("${socketio.server.hostname}")
     private String hostname;
-
     @Value("${socketio.server.port}")
     private int port;
-
     private SocketIOServer server;
-
     private final Optional<RedissonClient> redissonClient;
+    private final AuthService authService;
 
     @Bean
     public SocketIOServer socketIoServer() {
@@ -35,10 +38,17 @@ public class SocketIoConfig {
             String username = data.getSingleUrlParam("username");
             String password = data.getSingleUrlParam("password");
 
-            // TODO: DB 조회 or 로그인 서비스 호출
-            if ("test".equals(username) && "1234".equals(password)) {
-                return AuthorizationResult.SUCCESSFUL_AUTHORIZATION;
+            Account account = authService.login(username, password);
+
+            if (account != null) {
+                Map<String, Object> storedParams = new HashMap<>();
+                storedParams.put("id", account.getId());
+                storedParams.put("nickname", account.getNickname());
+                storedParams.put("username", account.getUsername());
+
+                return new AuthorizationResult(true, storedParams);
             }
+
             return AuthorizationResult.FAILED_AUTHORIZATION;
         });
 

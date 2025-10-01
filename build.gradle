@@ -32,6 +32,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.flywaydb:flyway-core:11.13.2'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.13.2'
+    testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -40,6 +44,7 @@ dependencies {
     implementation 'com.corundumstudio.socketio:netty-socketio:2.0.12'
     implementation 'org.redisson:redisson:3.51.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.82'
 }
 
 tasks.named('test') {
