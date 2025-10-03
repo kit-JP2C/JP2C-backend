@@ -1,6 +1,7 @@
 package com.github.jp2c.common.dto;
 
 import com.github.jp2c.common.constant.ResponseStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

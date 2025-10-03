@@ -7,6 +7,7 @@ import com.github.jp2c.common.dto.CommonErrorResponse;
 import com.github.jp2c.common.dto.CommonResponse;
 import com.github.jp2c.exception.BadRequestException;
 import com.github.jp2c.room.dto.RoomJoinOrLeaveRequest;
+import com.github.jp2c.room.dto.RoomListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,6 @@ public class RoomService {
             .flatMap(client -> client.getAllRooms().stream())
             .filter(s -> !s.isEmpty())
             .collect(Collectors.toSet());
-        ackRequest.sendAckData(new CommonResponse<>(allRooms));
+        ackRequest.sendAckData(new CommonResponse<>(new RoomListResponse(allRooms)));
     }
 }
