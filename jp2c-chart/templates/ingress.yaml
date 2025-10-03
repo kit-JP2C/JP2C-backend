@@ -48,6 +48,20 @@ spec:
                 name: {{ .Values.jp2cIngress.service.name }}
                 port:
                   number: 8080
+          - path: /v3/api-docs
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.jp2cIngress.service.name }}
+                port:
+                  number: 8080
+          - path: /v3/api-docs/swagger-config
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.jp2cIngress.service.name }}
+                port:
+                  number: 8080
 {{- end }}
 
 ---
