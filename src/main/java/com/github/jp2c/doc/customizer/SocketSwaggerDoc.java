@@ -105,7 +105,7 @@ public class SocketSwaggerDoc implements OpenApiCustomizer {
                 op.addExtension("x-socket-event", ann.value());
 
                 // Swagger Path 주입 (가상 REST endpoint)
-                openApi.path("/socket/" + ann.value(), new PathItem().post(op));
+                openApi.path(ann.value(), new PathItem().post(op));
             }
         }
     }
