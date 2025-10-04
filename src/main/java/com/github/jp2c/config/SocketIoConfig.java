@@ -3,15 +3,14 @@ package com.github.jp2c.config;
 import com.corundumstudio.socketio.AuthorizationResult;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.store.RedissonStoreFactory;
-import com.github.jp2c.auth.entity.Account;
-import com.github.jp2c.auth.service.AuthService;
+import com.github.jp2c.validator.JwtTokenValidator;
+import io.jsonwebtoken.Claims;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,30 +25,25 @@ public class SocketIoConfig {
     private int port;
     private SocketIOServer server;
     private final Optional<RedissonClient> redissonClient;
-    private final AuthService authService;
 
     @Bean
-    public SocketIOServer socketIoServer() {
+    public SocketIOServer socketIoServer(JwtTokenValidator jwtTokenValidator) {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
         config.setHostname(hostname);
         config.setPort(port);
         config.setOrigin("*");
         config.setAuthorizationListener(data -> {
-            String username = data.getSingleUrlParam("username");
-            String password = data.getSingleUrlParam("password");
+            String accessToken = data.getSingleUrlParam("accessToken");
 
-            Account account = authService.login(username, password);
+            Claims claims = jwtTokenValidator.validateToken(accessToken);
 
-            if (account != null) {
-                Map<String, Object> storedParams = new HashMap<>();
-                storedParams.put("id", account.getId());
-                storedParams.put("nickname", account.getNickname());
-                storedParams.put("username", account.getUsername());
 
-                return new AuthorizationResult(true, storedParams);
-            }
+            Map<String, Object> storedParams = new HashMap<>();
+            storedParams.put("id", claims.get("id"));
+            storedParams.put("nickname", claims.get("nickname"));
+            storedParams.put("username", claims.get("username"));
 
-            return AuthorizationResult.FAILED_AUTHORIZATION;
+            return new AuthorizationResult(true, storedParams);
         });
 
         redissonClient.ifPresent(client -> config.setStoreFactory(new RedissonStoreFactory(client)));
