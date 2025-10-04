@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RegisterRequest extends LoginRequest {
+public class LoginRequest {
     @NotBlank
-    private String nickname;
+    private String username;
+    @NotBlank
+    private String password;
 }

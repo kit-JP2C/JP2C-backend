@@ -36,6 +36,8 @@ spec:
                 secretKeyRef:
                   name: jp2c-postgres-secret
                   key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              value: {{ required "jwtSecret must be set" .Values.jwtSecret }}
           resources:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}

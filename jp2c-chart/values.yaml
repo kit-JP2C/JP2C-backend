@@ -67,3 +67,5 @@ grafanaIngress:
   service:
     name: grafana
     port: 80
+
+jwtSecret:

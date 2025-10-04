@@ -65,4 +65,5 @@ jobs:
 
           helm upgrade --install jp2c ./jp2c-chart \
             --set image.repository=${{ steps.login-ecr.outputs.registry }}/jp2c \
-            --set image.tag=$VERSION
+            --set image.tag=$VERSION \
+            --set jwtSecret=${{ secrets.JWT_SECRET }}
