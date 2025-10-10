@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
         - name: ecr-regcred
@@ -37,7 +39,10 @@ spec:
                   name: jp2c-postgres-secret
                   key: POSTGRES_PASSWORD
             - name: JWT_SECRET
-              value: {{ required "jwtSecret must be set" .Values.jwtSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: jp2c-secret
+                  key: JWT_SECRET
           resources:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}
