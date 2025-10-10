@@ -2,6 +2,8 @@ replicaCount: 3
 
 image:
   pullPolicy: IfNotPresent
+  repository:
+  tag:
 
 service:
   type: NodePort
@@ -45,6 +47,8 @@ postgres:
   secretName: jp2c-postgres-secret
   persistence:
     size: 5Gi
+  username: ""
+  password: ""
 
 jp2cIngress:
   enabled: true
@@ -68,4 +72,5 @@ grafanaIngress:
     name: grafana
     port: 80
 
-jwtSecret:
+secret:
+  jwtSecret:
