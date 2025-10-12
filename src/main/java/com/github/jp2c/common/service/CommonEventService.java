@@ -1,6 +1,7 @@
 package com.github.jp2c.common.service;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import com.github.jp2c.common.clientKeys.ClientKeys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,12 +11,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CommonEventService {
     public void handleConnect(SocketIOClient client) {
-        String nickname = client.get("nickname");
+        String nickname = ClientKeys.NICKNAME.get(client);
         log.info("유저 접속 : {}", nickname);
     }
 
     public void handleDisconnect(SocketIOClient client) {
-        String nickname = client.get("nickname");
+        String nickname = ClientKeys.NICKNAME.get(client);
         log.info("유저 접속 해제 : {}", nickname);
     }
 }
