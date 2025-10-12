@@ -3,6 +3,7 @@ package com.github.jp2c.room.controller;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.github.jp2c.annotation.SocketEvent;
+import com.github.jp2c.room.dto.ReadyOrUnreadyRequest;
 import com.github.jp2c.room.dto.RoomJoinOrLeaveRequest;
 import com.github.jp2c.room.dto.RoomListResponse;
 import com.github.jp2c.room.service.RoomService;
@@ -20,16 +21,16 @@ public class RoomController {
         payload = RoomJoinOrLeaveRequest.class
     )
     public void handleJoinRoom(SocketIOClient client, RoomJoinOrLeaveRequest request, AckRequest ackRequest) {
-        roomService.joinRoom(client, request, ackRequest);
+        roomService.joinRoom(client, request);
     }
 
     @SocketEvent(value = "leave-room",
         summary = "방 나가기",
-        description = "유저를 방에서 나가게 합니다..",
+        description = "유저를 방에서 나가게 합니다.",
         payload = RoomJoinOrLeaveRequest.class
     )
     public void handleLeaveRoom(SocketIOClient client, RoomJoinOrLeaveRequest request, AckRequest ackRequest) {
-        roomService.leaveRoom(client, request, ackRequest);
+        roomService.leaveRoom(client, request);
     }
 
     @SocketEvent(value = "get-all-rooms",
@@ -38,5 +39,21 @@ public class RoomController {
     )
     public void handleGetAllRooms(AckRequest ackRequest) {
         roomService.getAllRooms(ackRequest);
+    }
+
+    @SocketEvent(value = "ready",
+        summary = "해당하는 방에 준비 신호를 보냅니다.",
+        payload = ReadyOrUnreadyRequest.class
+    )
+    public void handleReady(SocketIOClient client, ReadyOrUnreadyRequest request) {
+        roomService.ready(client, request);
+    }
+
+    @SocketEvent(value = "unready",
+        summary = "해당하는 방의 준비를 해제합니다.",
+        payload = ReadyOrUnreadyRequest.class
+    )
+    public void handleUnready(SocketIOClient client, ReadyOrUnreadyRequest request) {
+        roomService.unready(client, request);
     }
 }
