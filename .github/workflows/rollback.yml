@@ -1,0 +1,42 @@
+name: Helm Rollback (Previous Revision)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    name: Rollback to previous Helm revision
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.K3S_KUBECONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Check Helm history
+        run: |
+          echo "Helm release history for jp2c:"
+          helm history jp2c || true
+
+      - name: Rollback to previous revision
+        run: |
+          LATEST=$(helm history jp2c | tail -n 1 | awk '{print $1}')
+          PREV=$((LATEST - 1))
+
+          if [ "$PREV" -lt 1 ]; then
+            echo "No previous revision found to rollback to."
+            exit 1
+          fi
+
+          echo "🔁 Rolling back 'jp2c' from revision ${LATEST} → ${PREV}"
+          helm rollback jp2c ${PREV}
+
+      - name: Verify rollback
+        run: |
+          echo "Rollback complete. Current release info:"
+          helm status jp2c
