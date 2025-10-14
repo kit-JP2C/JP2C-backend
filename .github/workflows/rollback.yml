@@ -33,7 +33,7 @@ jobs:
             exit 1
           fi
 
-          echo "🔁 Rolling back 'jp2c' from revision ${LATEST} → ${PREV}"
+          echo "Rolling back 'jp2c' from revision ${LATEST} → ${PREV}"
           helm rollback jp2c ${PREV}
 
       - name: Verify rollback
