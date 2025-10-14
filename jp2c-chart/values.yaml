@@ -55,10 +55,11 @@ jp2cIngress:
   namespace: default
   className: traefik
   tlsSecret: jp2c-tls
-  host: jp2c.org
+  apiHost: api.jp2c.org
+  socketHost: jp2c.org
   service:
     name: jp2c-service
-    wsPort: 3000
+    socketPort: 3000
     httpPort: 8080
 
 grafanaIngress:
@@ -66,7 +67,6 @@ grafanaIngress:
   namespace: logging
   className: traefik
   tlsSecret: jp2c-tls
-  host: jp2c.org
   path: /grafana
   service:
     name: grafana
