@@ -14,7 +14,7 @@ spec:
   tls:
     - secretName: {{ .Values.jp2cIngress.tlsSecret }}
   rules:
-    - host: {{ .Values.jp2cIngress.host }}
+    - host: {{ .Values.jp2cIngress.socketHost }}
       http:
         paths:
           - path: /
@@ -23,11 +23,11 @@ spec:
               service:
                 name: {{ .Values.jp2cIngress.service.name }}
                 port:
-                  number: {{ .Values.jp2cIngress.service.wsPort }}
-    - host: {{ .Values.jp2cIngress.host }}
+                  number: {{ .Values.jp2cIngress.service.socketPort }}
+    - host: {{ .Values.jp2cIngress.apiHost }}
       http:
         paths:
-          - path: /api
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -82,7 +82,7 @@ spec:
   tls:
     - secretName: {{ .Values.grafanaIngress.tlsSecret }}
   rules:
-    - host: {{ .Values.grafanaIngress.host }}
+    - host: {{ .Values.jp2cIngress.apiHost }}
       http:
         paths:
           - path: {{ .Values.grafanaIngress.path }}
