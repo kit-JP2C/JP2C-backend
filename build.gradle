@@ -51,6 +51,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
     implementation 'org.apache.commons:commons-lang3:3.19.0'
     implementation 'ch.qos.logback:logback-core:1.5.19'
+    implementation 'ch.qos.logback:logback-classic:1.5.19'
 }
 
 tasks.named('test') {

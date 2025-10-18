@@ -1,7 +1,6 @@
 package com.github.jp2c.common.dto;
 
 import com.github.jp2c.common.constant.ResponseStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
