@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface AuthRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByUsernameAndIsAppliedIsTrue(String username);
+
+    Optional<Account> findByNicknameAndIsAppliedIsTrue(String nickname);
 }

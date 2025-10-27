@@ -26,16 +26,20 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private final Boolean isApplied = false;
 
-    public Account(String username, String password, String nickname) {
+    public Account(String username, String password, String email, String nickname) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.nickname = nickname;
     }
 
-    public void update(String username, String password, String nickname) {
+    public void update(String username, String password, String email, String nickname) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
