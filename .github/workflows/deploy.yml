@@ -68,7 +68,7 @@ jobs:
             --set image.tag=$VERSION \
             --set secret.jwtSecret="$(openssl rand -base64 64)" \
             --set postgres.username=${{ secrets.POSTGRES_USERNAME }} \
-            --set postgres.password=${{ secrets.POSTGRES_PASSWORD }} \ 
+            --set postgres.password=${{ secrets.POSTGRES_PASSWORD }} \
             --set mail.host=${{ secrets.MAIL_HOST }} \
             --set mail.port=${{ secrets.MAIL_PORT }} \
             --set mail.username=${{ secrets.MAIL_USERNAME }} \
