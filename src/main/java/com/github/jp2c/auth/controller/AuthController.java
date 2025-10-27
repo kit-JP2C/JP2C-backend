@@ -1,5 +1,7 @@
 package com.github.jp2c.auth.controller;
 
+import com.github.jp2c.auth.dto.FindUsernameRequest;
+import com.github.jp2c.auth.dto.FindUsernameResponse;
 import com.github.jp2c.auth.dto.FindUsernameTokenRequest;
 import com.github.jp2c.auth.dto.LoginRequest;
 import com.github.jp2c.auth.dto.LoginResponse;
@@ -41,5 +43,11 @@ public class AuthController {
     @Operation(summary = "아이디 찾기 용 토큰 발급")
     public void sendFindUsernameToken(@RequestBody @Valid FindUsernameTokenRequest request) throws MessagingException {
         authService.sendFindUsernameToken(request);
+    }
+
+    @PostMapping("/find-username")
+    @Operation(summary = "아이디 찾기")
+    public FindUsernameResponse findUsername(@RequestBody @Valid FindUsernameRequest request) {
+        return authService.findUsername(request);
     }
 }
