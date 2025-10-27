@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class Account {
 
     @Column(nullable = false)
     private final Boolean isApplied = false;
+
+    @OneToOne(mappedBy = "account")
+    private VerificationCode verificationCode;
 
     public Account(String username, String password, String email, String nickname) {
         this.username = username;

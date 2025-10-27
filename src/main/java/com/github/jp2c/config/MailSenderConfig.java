@@ -8,7 +8,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@Profile({"k8s"})
 public class MailSenderConfig {
     @Value("${spring.mail.host}")
     private String host;
@@ -23,8 +22,12 @@ public class MailSenderConfig {
     private String password;
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
+    @Profile("!k8s")
+    public JavaMailSender getMockJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        if (host == null) {
+            return mailSender;
+        }
 
         mailSender.setHost(host);
         mailSender.setPort(port);
