@@ -1,36 +1,31 @@
 package com.github.jp2c.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@Profile({"k8s"})
+@Slf4j
 public class MailSenderConfig {
-    @Value("${spring.mail.host}")
-    private String host;
-
-    @Value("${spring.mail.port}")
-    private int port;
-
-    @Value("${spring.mail.username}")
-    private String username;
-
-    @Value("${spring.mail.password}")
-    private String password;
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    @Profile("k8s")
+    public JavaMailSender realMailSender(JavaMailSender sender) {
+        return sender;
+    }
 
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
-
-        return mailSender;
+    @Bean
+    @Profile("!k8s")
+    public JavaMailSender mockMailSender() {
+        return new JavaMailSenderImpl() {
+            @Override
+            public void send(SimpleMailMessage... simpleMessages) {
+                log.info("[Mock] 이메일 전송 스킵됨");
+            }
+        };
     }
 }
