@@ -1,11 +1,13 @@
 package com.github.jp2c.auth.controller;
 
+import com.github.jp2c.auth.dto.FindUsernameTokenRequest;
 import com.github.jp2c.auth.dto.LoginRequest;
 import com.github.jp2c.auth.dto.LoginResponse;
 import com.github.jp2c.auth.dto.RegisterRequest;
 import com.github.jp2c.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,5 +35,11 @@ public class AuthController {
     @Operation(summary = "로그인")
     public LoginResponse login(@RequestBody @Valid LoginRequest request) {
         return authService.login(request);
+    }
+
+    @PostMapping("/find-username/token")
+    @Operation(summary = "아이디 찾기 용 토큰 발급")
+    public void sendFindUsernameToken(@RequestBody @Valid FindUsernameTokenRequest request) throws MessagingException {
+        authService.sendFindUsernameToken(request);
     }
 }

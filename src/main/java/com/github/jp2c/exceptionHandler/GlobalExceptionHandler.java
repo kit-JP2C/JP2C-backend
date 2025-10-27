@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public CommonErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.error(ex.getMessage(), ex);
-        return new CommonErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Request");
+        return new CommonErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler({HttpMessageNotReadableException.class})

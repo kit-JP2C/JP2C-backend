@@ -43,6 +43,14 @@ spec:
                 secretKeyRef:
                   name: jp2c-secret
                   key: JWT_SECRET
+            - name: SPRING_MAIL_HOST
+              value: {{ required "Mail host required" .Values.mail.host }}
+            - name: SPRING_MAIL_PORT
+              value: {{ required "Mail port required" .Values.mail.host }}
+            - name: SPRING_MAIL_USERNAME
+              value: {{ required "Mail username required" .Values.mail.username }}
+            - name: SPRING_MAIL_PASSWORD
+              value: {{ required "Mail password required" .Values.mail.password }}
           resources:
             requests:
               cpu: {{ .Values.resources.requests.cpu }}

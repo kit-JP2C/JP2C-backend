@@ -74,3 +74,9 @@ grafanaIngress:
 
 secret:
   jwtSecret:
+
+mail:
+  host:
+  port:
+  username:
+  password:
