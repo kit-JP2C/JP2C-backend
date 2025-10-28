@@ -1,6 +1,5 @@
 package com.github.jp2c.status.controller;
 
-import com.corundumstudio.socketio.SocketIOServer;
 import com.github.jp2c.common.dto.CommonResponse;
 import com.github.jp2c.room.service.RoomService;
 import com.github.jp2c.status.dto.CurrentSocketStatusResponse;
