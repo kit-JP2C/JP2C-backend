@@ -65,11 +65,15 @@ public class RoomService {
     }
 
     public void getAllRooms(AckRequest ackRequest) {
-        Set<String> allRooms = server.getAllClients().stream()
+        Set<String> allRooms = getAllRoomLists();
+        ackRequest.sendAckData(new CommonResponse<>(new RoomListResponse(allRooms)));
+    }
+
+    public Set<String> getAllRoomLists() {
+        return server.getAllClients().stream()
             .flatMap(client -> client.getAllRooms().stream())
             .filter(s -> !s.isEmpty())
             .collect(Collectors.toSet());
-        ackRequest.sendAckData(new CommonResponse<>(new RoomListResponse(allRooms)));
     }
 
     public void ready(SocketIOClient client, ReadyOrUnreadyRequest request) {

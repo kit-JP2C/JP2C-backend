@@ -11,15 +11,17 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CorsConfigurationSource corsConfigurationSource;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
@@ -28,11 +30,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors(cors ->
-                cors.configurationSource(corsConfigurationSource))
+                cors.configurationSource(corsConfigurationSource()))
             .csrf(CsrfConfigurer::disable)
             .headers(httpHeaders ->
                 httpHeaders.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
             .build();
+    }
+
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOriginPatterns(List.of("*"));;
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
+        return source;
     }
 }
