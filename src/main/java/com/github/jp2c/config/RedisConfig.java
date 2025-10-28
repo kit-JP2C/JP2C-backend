@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("k8s")
 public class RedisConfig {
     @Value("${redis.server}")
     private String redisServer;
