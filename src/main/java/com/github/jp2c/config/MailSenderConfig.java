@@ -1,5 +1,6 @@
 package com.github.jp2c.config;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class MailSenderConfig {
     @Profile("!k8s")
     public JavaMailSender getMockJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        if (host == null) {
+        if (Strings.isBlank(host)) {
             return mailSender;
         }
 
