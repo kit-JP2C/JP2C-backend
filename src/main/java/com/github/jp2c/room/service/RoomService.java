@@ -12,8 +12,10 @@ import com.github.jp2c.room.dto.ReadyOrUnreadyResponse;
 import com.github.jp2c.room.dto.RoomJoinOrLeaveRequest;
 import com.github.jp2c.room.dto.RoomJoinOrLeaveResponse;
 import com.github.jp2c.room.dto.RoomListResponse;
+import com.github.jp2c.status.service.SocketConnectionTracker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -26,8 +28,11 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final SocketIOServer server;
     private final PointService pointService;
+    private final SocketConnectionTracker socketConnectionTracker;
+    private final RedissonClient redissonClient;
 
     public void joinRoom(SocketIOClient client, RoomJoinOrLeaveRequest req) {
+        socketConnectionTracker.onJoin(client, req.getRoomName());
         String nickname = ClientKeys.NICKNAME.get(client);
         if (server.getRoomOperations(req.getRoomName()).getClients().stream().anyMatch(
             socket -> Objects.equals(ClientKeys.NICKNAME.get(socket), nickname)
@@ -48,6 +53,7 @@ public class RoomService {
     }
 
     public void leaveRoom(SocketIOClient client, RoomJoinOrLeaveRequest req) {
+        socketConnectionTracker.onLeave(client, req.getRoomName());
         String nickname = ClientKeys.NICKNAME.get(client);
 
         if (client.getAllRooms().stream().noneMatch(roomName -> Objects.equals(roomName, req.getRoomName()))) {
@@ -70,9 +76,8 @@ public class RoomService {
     }
 
     public Set<String> getAllRoomLists() {
-        return server.getAllClients().stream()
-            .flatMap(client -> client.getAllRooms().stream())
-            .filter(s -> !s.isEmpty())
+        return redissonClient.getKeys().getKeysStream()
+            .filter(key -> key.startsWith("socket:rooms:"))
             .collect(Collectors.toSet());
     }
 
