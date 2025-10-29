@@ -1,6 +1,5 @@
 package com.github.jp2c.status.controller;
 
-import com.github.jp2c.common.dto.CommonResponse;
 import com.github.jp2c.status.dto.CurrentSocketStatusResponse;
 import com.github.jp2c.status.service.SocketConnectionTracker;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +16,7 @@ public class SocketStatusController {
 
     @GetMapping
     @Operation(summary = "현재 접속중인 클라이언트 수")
-    public CommonResponse<?> getCurrentSocketStatus() {
-        return new CommonResponse<>(new CurrentSocketStatusResponse(socketConnectionTracker.getActiveClientCount()));
+    public CurrentSocketStatusResponse getCurrentSocketStatus() {
+        return new CurrentSocketStatusResponse(socketConnectionTracker.getActiveClientCount());
     }
 }
