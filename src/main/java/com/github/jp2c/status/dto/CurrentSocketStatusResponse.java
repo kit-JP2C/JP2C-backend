@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CurrentSocketStatusResponse {
     private int clients;
-    private int rooms;
 }
