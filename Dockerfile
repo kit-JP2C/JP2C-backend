@@ -12,7 +12,7 @@ COPY . .
 RUN ./gradlew clean bootJar --no-daemon
 
 # ---- Runtime Stage ----
-FROM openjdk:23-slim
+FROM eclipse-temurin:23-alpine
 WORKDIR /app
 
 # 빌더에서 JAR 복사
